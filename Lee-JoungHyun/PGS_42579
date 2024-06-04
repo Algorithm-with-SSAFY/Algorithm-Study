@@ -1,0 +1,59 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        int SIZE = genres.length;
+        int genreCnt = 0;
+        
+        // 장르, 장르 IDX 저장
+        HashMap<String, Integer> genreCodes = new HashMap<>();
+        // 장르별 총 재생수 저장
+        int[][] genrePlays = new int[SIZE][2];
+        // 장르별 위치에 재생수, 곡 저장
+        PriorityQueue<int[]>[] pQs = new PriorityQueue[SIZE];
+        
+        for (int i = 0; i < SIZE; i++) {
+            pQs[i] = new PriorityQueue<>((a, b) -> {
+                if (b[0] != a[0]) return b[0] - a[0];
+                return a[1] - b[1];
+            });
+            genrePlays[i] = new int[]{i, 0};
+        }
+        
+        for (int song = 0; song < SIZE; song++) {
+            //1. 장르별 HashMap 에 분류
+            if (!genreCodes.containsKey(genres[song])) {
+                genreCodes.put(genres[song], genreCnt++);
+            } 
+            int code = genreCodes.get(genres[song]);
+            //2. int, int 배열에 장르당 재생수 넣기
+            genrePlays[code][1] += plays[song];
+            //3. 장르별 곡 우선순위 배열에 넣기 (재생수, 곡)
+            pQs[code].add(new int[]{plays[song], song});
+        }
+
+        // 장르별 총 재생수를 기준으로 정렬
+        Arrays.sort(genrePlays, (a, b) -> b[1] - a[1]);
+        
+        // 결과를 저장할 리스트
+        List<Integer> result = new ArrayList<>();
+        
+        for (int i = 0; i < SIZE; i++) {
+            if (genrePlays[i][1] == 0) break;
+            int code = genrePlays[i][0];
+            PriorityQueue<int[]> pq = pQs[code];
+            // 최대 2개의 곡을 결과에 추가
+            for (int j = 0; j < 2 && !pq.isEmpty(); j++) {
+                result.add(pq.poll()[1]);
+            }
+        }
+        
+        // 리스트를 배열로 변환
+        int[] answer = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            answer[i] = result.get(i);
+        }
+        
+        return answer;
+    }
+}

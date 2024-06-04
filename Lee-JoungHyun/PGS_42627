@@ -1,0 +1,64 @@
+import java.util.*;
+
+class Solution {
+    
+    private static class Job implements Comparable<Job>{
+        int start;
+        int cost;
+        
+        public Job(int start, int cost) {
+            this.start = start;
+            this.cost = cost;
+        }
+        
+        public int compareTo(Job o) {
+            if (this.start != o.start)
+                return this.start - o.start;
+            return this.cost - o.cost;
+        }
+        
+        public String toString() {
+            return this.start + " - " + this.cost;
+        }
+    }
+    
+    public int solution(int[][] jobs) {
+        int answer = 0;
+        int jobCnt = jobs.length;
+        int now = 0;
+        
+        PriorityQueue<Job> pq = new PriorityQueue<>();
+        
+        for (int[] job : jobs) {
+            pq.add(new Job(job[0], job[1]));
+        }
+        
+        Job nextJob = pq.poll();
+        now = nextJob.start + nextJob.cost;
+        answer += now - nextJob.start;
+        System.out.println(now + " " + answer);
+        
+        List<Job> list = new LinkedList<>();
+        while(!pq.isEmpty() || list.size() != 0) {
+            while(!pq.isEmpty() && pq.peek().start <= now) {
+                list.add(pq.poll());
+            }
+            
+            Collections.sort(list, (a, b) -> a.cost - b.cost);
+            
+            if (list.size() == 0) {
+                nextJob = pq.poll();
+                now = nextJob.start + nextJob.cost;
+                answer += nextJob.cost;
+            } else {
+                nextJob = list.remove(0);
+                now += nextJob.cost;
+                answer += now - nextJob.start;
+            }
+            System.out.println(now + " " + answer);
+        }
+        
+        
+        return answer / jobCnt;
+    }
+}
