@@ -1,0 +1,31 @@
+import java.util.*;
+
+class Solution {
+    public long solution(int n, int[] times) {
+
+        // 2진탐색으로 LowerBound 찾기
+        long start = 1;
+        long end = (Arrays.stream(times).max().getAsInt() * (long) n) + 1;
+        
+        while (start < end) {
+            long mid = (start + end) / 2;
+            if (isPossible(mid, times, n)) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        
+        return start;
+    }
+    
+    // time 시간 안에 n명 검사 가능한지 확인하기!
+    private boolean isPossible(long time, int[] times, int n) {
+        for (int t : times) {
+            if (n <= time / t)
+                return true;
+            n -= time / t;
+        }
+        return n <= 0;
+    }
+}
