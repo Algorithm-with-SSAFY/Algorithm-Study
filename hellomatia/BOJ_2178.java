@@ -3,18 +3,7 @@ package hellomatia;
 import java.io.*;
 import java.util.*;
 
-class Point {
-    int x;
-    int y;
-    int count;
-    Point(int x, int y, int count) {
-        this.x = x;
-        this.y = y;
-        this.count = count;
-    }
-}
-
-public class Main {
+public class BOJ_2178 {
     static BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static int N, M;
@@ -42,7 +31,7 @@ public class Main {
         visited = new boolean[N][M];
         visited[0][0] = true;
         min = Integer.MAX_VALUE;
-        
+
         /*
         dfs(0, 0, 1);
         */
@@ -96,7 +85,18 @@ public class Main {
         }
     }
 
+    class Point {
+        int x;
+        int y;
+        int count;
+        Point(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
+
     public static void main (String[] args) throws IOException {
-        new Main().solution();
+        new BOJ_2178().solution();
     }
 }
